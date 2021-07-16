@@ -1,33 +1,50 @@
-// GIVEN I am using a daily planner to create a schedule
-// WHEN I open the planner
-// THEN the current day is displayed at the top of the calendar
-
+// Code that inserts and runs the clock on the screen.
 function displayTime() {
   var time = moment().format('MMM DD, YYYY [at] hh:mm:ss a');
   $("#currentDay").text(time);;
 }
 setInterval(displayTime, 1000);
 
-// WHEN I scroll down
-// THEN I am presented with timeblocks for standard business hours
+// Function that changes css of the timeblocks corresponding to current time
+function timeChecker() {
+  var present = moment().hours()
+  var time = $(".time-block");
+  time.each(function() {
+      var hour = parseInt($(this).attr("id"))
+      if (hour === present) {
+          $(this).children(".col-sm-10").attr("class", "present col-sm-10 description")
+      } else if (present > hour) {
+          $(this).children(".col-sm-10").attr("class", "past col-sm-10 description")
+      } else {
+          $(this).children(".col-sm-10").attr("class", "future col-sm-10 description")
+      }
+  })
+};
 
+// Code that runs the color code and refreshes it every 15 minutes;
+timeChecker();
+setInterval(timeChecker, 900000);
 
+// Save text into local storage after clicking a save button
 
+$(".saveBtn").on("click", function() {
+  var time = $(this).parent().attr("id");
+  var task = $(this).siblings("textarea").val().replace(/[""]+/g, "");
+  
 
-// WHEN I view the timeblocks for that day
-// THEN each timeblock is color coded to indicate whether it is in the past, present, or future
+  localStorage.setItem(time, JSON.stringify(task));
+});
 
+// Waits for page to finish loading then loads previous value from localStorage
+$(document).ready(function() {
 
-
-
-// WHEN I click into a timeblock
-// THEN I can enter an event
-
-
-// WHEN I click the save button for that timeblock
-// THEN the text for that event is saved in local storage
-
-
-// WHEN I refresh the page
-// THEN the saved events persist
-
+  $("#9 textarea").val(localStorage.getItem("9").replace(/[""]+/g, ""));
+  $("#10 textarea").val(localStorage.getItem("10").replace(/[""]+/g, ""));
+  $("#11 textarea").val(localStorage.getItem("11").replace(/[""]+/g, ""));
+  $("#12 textarea").val(localStorage.getItem("12").replace(/[""]+/g, ""));
+  $("#13 textarea").val(localStorage.getItem("13").replace(/[""]+/g, ""));
+  $("#14 textarea").val(localStorage.getItem("14").replace(/[""]+/g, ""));
+  $("#15 textarea").val(localStorage.getItem("15").replace(/[""]+/g, ""));
+  $("#16 textarea").val(localStorage.getItem("16").replace(/[""]+/g, ""));
+  $("#17 textarea").val(localStorage.getItem("17")).replace(/[""]+/g, "");
+});
